@@ -18,9 +18,22 @@ public class AuthController {
 
   @PostMapping(value = "/sign-up")
   @ResponseStatus(ACCEPTED)
-  public ResponseEntity<?> create(@RequestBody User user) {
+  public ResponseEntity<?> signUp(@RequestBody User user) {
     try {
       userRepository.save(user);
+      return new ResponseEntity<>(user, HttpStatus.OK);
+    } catch (Exception ex) {
+      String errorMessage;
+      errorMessage = ex + " <== error";
+      return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PostMapping(value = "/sign-in")
+  @ResponseStatus(ACCEPTED)
+  public ResponseEntity<?> signIn(@RequestBody User loginUser) {
+    try {
+      User user = userRepository.findByEmail(loginUser.getEmail());
       return new ResponseEntity<>(user, HttpStatus.OK);
     } catch (Exception ex) {
       String errorMessage;

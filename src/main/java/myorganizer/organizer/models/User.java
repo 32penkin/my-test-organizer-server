@@ -20,6 +20,28 @@ public class User {
 
   private boolean terms;
 
+  private boolean isAdmin;
+
+  @Override
+  public String toString() {
+    return "User{" +
+      "id=" + id +
+      ", fullName='" + fullName + '\'' +
+      ", email='" + email + '\'' +
+      ", password='" + password + '\'' +
+      ", terms=" + terms +
+      ", isAdmin=" + isAdmin +
+      '}';
+  }
+
+  public boolean isAdmin() {
+    return isAdmin;
+  }
+
+  public void setAdmin(boolean admin) {
+    isAdmin = admin;
+  }
+
   public void setId(Integer id) {
     this.id = id;
   }
