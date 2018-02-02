@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
@@ -16,10 +17,14 @@ public class AuthController {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private BCryptPasswordEncoder bCryptPasswordEncoder;
+
   @PostMapping(value = "/sign-up")
   @ResponseStatus(ACCEPTED)
   public ResponseEntity<?> signUp(@RequestBody User user) {
     try {
+      user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
       userRepository.save(user);
       return new ResponseEntity<>(user, HttpStatus.OK);
     } catch (Exception ex) {
