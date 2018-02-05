@@ -1,6 +1,6 @@
 package myorganizer.organizer.controllers;
 
-import myorganizer.organizer.models.User;
+import myorganizer.organizer.models.AppUser;
 import myorganizer.organizer.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class AuthController {
 
   @PostMapping(value = "/sign-up")
   @ResponseStatus(ACCEPTED)
-  public ResponseEntity<?> signUp(@RequestBody User user) {
+  public ResponseEntity<?> signUp(@RequestBody AppUser user) {
     try {
       user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
       userRepository.save(user);
@@ -36,9 +36,9 @@ public class AuthController {
 
   @PostMapping(value = "/sign-in")
   @ResponseStatus(ACCEPTED)
-  public ResponseEntity<?> signIn(@RequestBody User loginUser) {
+  public ResponseEntity<?> signIn(@RequestBody AppUser loginUser) {
     try {
-      User user = userRepository.findByEmail(loginUser.getEmail());
+      AppUser user = userRepository.findByEmail(loginUser.getEmail());
       return new ResponseEntity<>(user, HttpStatus.OK);
     } catch (Exception ex) {
       String errorMessage;
@@ -48,7 +48,7 @@ public class AuthController {
   }
 
   @GetMapping(path = "/all")
-  public @ResponseBody Iterable<User> getAllUsers() {
+  public @ResponseBody Iterable<AppUser> getAllUsers() {
     return userRepository.findAll();
   }
 }

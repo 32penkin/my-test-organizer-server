@@ -1,8 +1,8 @@
 package myorganizer.organizer.repositories;
 
-import myorganizer.organizer.models.User;
+import myorganizer.organizer.models.AppUser;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<User, Long> {
-  User findByEmail(String email);
+public interface UserRepository extends CrudRepository<AppUser, Long> {
+  AppUser findByEmail(String email);
 }
