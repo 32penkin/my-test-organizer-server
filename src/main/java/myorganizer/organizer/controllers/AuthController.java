@@ -3,6 +3,7 @@ package myorganizer.organizer.controllers;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import myorganizer.organizer.models.AppUser;
+import myorganizer.organizer.models.TokenEntity;
 import myorganizer.organizer.repositories.UserRepository;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,20 +44,6 @@ public class AuthController {
     }
   }
 
-//  @PostMapping(value = "/sign-in")
-//  @ResponseStatus(ACCEPTED)
-//  public ResponseEntity<?> signIn(@RequestBody AppUser loginUser) throws ServletException {
-//    try {
-//      AppUser user = userRepository.findByEmail(loginUser.getEmail());
-//      return new ResponseEntity<>(user, HttpStatus.OK);
-//    } catch (Exception ex) {
-//      String errorMessage;
-//      errorMessage = ex + " <== error";
-//      return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-//    }
-//  }
-
-
   @RequestMapping(value = "/sign-in", method = RequestMethod.POST, produces = "application/json")
   public @ResponseBody ResponseEntity<String> login(@RequestBody AppUser login) throws ServletException {
     String jwtToken = "";
@@ -82,7 +69,6 @@ public class AuthController {
 
     jwtToken = Jwts.builder().setSubject(email).claim("roles", "user").setIssuedAt(new Date())
       .signWith(SignatureAlgorithm.HS256, "secretkey").compact();
-    System.out.print(jwtToken);
 
     final HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -93,18 +79,5 @@ public class AuthController {
   @GetMapping(path = "/all")
   public @ResponseBody Iterable<AppUser> getAllUsers() {
     return userRepository.findAll();
-  }
-}
-
-class TokenEntity {
-  private String token;
-
-  @Override
-  public String toString() {
-    return "{\"token\":" + "\"" + token + "\"}";
-  }
-
-  public TokenEntity(String token) {
-    this.token = token;
   }
 }
