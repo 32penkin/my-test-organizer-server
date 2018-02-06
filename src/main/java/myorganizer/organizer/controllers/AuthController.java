@@ -33,7 +33,14 @@ public class AuthController {
     try {
       user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
       userRepository.save(user);
-      return new ResponseEntity<>(user, HttpStatus.OK);
+      String jwtToken = Jwts.builder()
+        .setSubject(user.getEmail())
+        .claim("isAdmin", user.isAdmin())
+        .claim("id", user.getId())
+        .setIssuedAt(new Date())
+        .signWith(SignatureAlgorithm.HS256, "secretkey").compact();
+
+      return new ResponseEntity<String>(new TokenEntity(jwtToken).toString(), HttpStatus.OK);
     } catch (Exception ex) {
       String errorMessage;
       errorMessage = ex + " <== error";
@@ -57,7 +64,11 @@ public class AuthController {
     if (!bCryptPasswordEncoder.matches(password, pwd)) {
       throw new ServletException("Invalid login. Please check your name and password.");
     }
-    jwtToken = Jwts.builder().setSubject(email).claim("roles", "user").setIssuedAt(new Date())
+    jwtToken = Jwts.builder()
+      .setSubject(email)
+      .claim("isAdmin", user.isAdmin())
+      .claim("id", user.getId())
+      .setIssuedAt(new Date())
       .signWith(SignatureAlgorithm.HS256, "secretkey").compact();
 
     return new ResponseEntity<String>(new TokenEntity(jwtToken).toString(), HttpStatus.OK);
